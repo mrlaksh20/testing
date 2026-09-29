@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [
+  <!ENTITY xxe "testing but dont know it work or not">
+]>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+  <text x="10" y="50" font-size="14">&xxe;</text>
+</svg>
